@@ -1,0 +1,35 @@
+<!-- popup.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Concentrate</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="popup.css">
+</head>
+<body>
+  <h1>Concentrate</h1>
+  <div id="sounds">
+    <div class="sound-item">
+      <button class="btn btn-outline-primary sound-button" id="whiteNoiseButton">White Noise</button>
+      <div class="volume-slider-wrapper">
+        <input type="range" class="volume-slider" id="whiteNoiseVolume" min="0" max="100" value="50">
+      </div>
+    </div>
+    <div class="sound-item">
+      <button class="btn btn-outline-primary sound-button" id="pinkNoiseButton">Pink Noise</button>
+      <div class="volume-slider-wrapper">
+        <input type="range" class="volume-slider" id="pinkNoiseVolume" min="0" max="100" value="50">
+      </div>
+    </div>
+    <div class="sound-item">
+      <button class="btn btn-outline-primary sound-button" id="brownNoiseButton">Brown Noise</button>
+      <div class="volume-slider-wrapper">
+        <input type="range" class="volume-slider" id="brownNoiseVolume" min="0" max="100" value="50">
+      </div>
+    </div>
+  </div>
+  <button id="playStopBtn" class="btn btn-success">Play</button>
+  <input type="range" class="volume-slider master-slider" id="masterVolume" min="0" max="100" value="50">
+  <script src="popup.js"></script>
+</body>
+</html>

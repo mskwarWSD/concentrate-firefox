@@ -1,0 +1,41 @@
+/* popup.css */
+body {
+    margin: 10px;
+}
+
+#sounds {
+    margin-bottom: 10px;
+  }
+  
+  .sound-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .sound-button {
+    width: 150px; /* Set a fixed width for the buttons */
+  }
+  
+  .volume-slider {
+    flex: 1;
+    margin-left: 10px;
+    max-width: 150px;
+  }
+
+  .master-slider {
+    background-color: #90EE90 !important; /* Set green background color */
+  }
+
+  .master-slider {
+    flex: 1;
+    margin-left: 10px;
+    min-width: 240px;
+    max-width: 240px;
+  }
+
+  #playStopBtn {
+    width: 55px; /* Adjust the width as needed */
+    min-width: 55px; /* Ensure minimum width */
+    max-width: 55px; /* Ensure maximum width */
+}

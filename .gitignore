@@ -1,0 +1,10 @@
+# Ignore directories
+/node_modules
+/.idea
+/.vscode
+/noise
+
+# Ignore specific files
+.DS_Store
+*.log
+*.zip
