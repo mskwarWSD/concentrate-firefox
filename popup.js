@@ -1,30 +1,68 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Get the play/stop button
     var playBtn = document.getElementById('playStopBtn');
+    var noiseButtons = document.querySelectorAll('[id$="NoiseButton"]');
+    var volumeSliders = document.querySelectorAll('[id$="NoiseVolume"]');
 
-    // Get all noise buttons
-    var whiteNoiseButton = document.getElementById('whiteNoiseButton');
-    var pinkNoiseButton = document.getElementById('pinkNoiseButton');
-    var brownNoiseButton = document.getElementById('brownNoiseButton');
+    var noises = [
+        { buttonId: 'whiteNoiseButton', audio: new Audio('noise/03-White-Noise-60min.mp3') },
+        { buttonId: 'dryerNoiseButton', audio: new Audio('noise/04-Dryer-60min.mp3') },
+        { buttonId: 'fan1NoiseButton', audio: new Audio('noise/05-Fan-60min.mp3') },
+        { buttonId: 'fan2NoiseButton', audio: new Audio('noise/33-Fan-60min.mp3') },
+        { buttonId: 'pinkNoiseButton', audio: new Audio('noise/07-PinkNoise-60min.mp3') },
+        { buttonId: 'rain1NoiseButton', audio: new Audio('noise/08-Rain-60min.mp3') },
+        { buttonId: 'rain2NoiseButton', audio: new Audio('noise/42-Rain-60min.mp3') },
+        { buttonId: 'rain3NoiseButton', audio: new Audio('noise/44-Rain-60min.mp3') },
+        { buttonId: 'heaterNoiseButton', audio: new Audio('noise/22-Heater-60min.mp3') },
+        { buttonId: 'ocean1NoiseButton', audio: new Audio('noise/25-Ocean-60min.mp3') },
+        { buttonId: 'ocean2NoiseButton', audio: new Audio('noise/26-Ocean-60min.mp3') },
+        { buttonId: 'underwater1NoiseButton', audio: new Audio('noise/46-Underwater-60min.mp3') },
+        { buttonId: 'underwater2NoiseButton', audio: new Audio('noise/49-Underwater-60min.mp3') },
+        { buttonId: 'waterfallNoiseButton', audio: new Audio('noise/32-Waterfall-60min.mp3') }
+    ];
 
-    // Get all volume sliders
-    var whiteNoiseVolume = document.getElementById('whiteNoiseVolume');
-    var pinkNoiseVolume = document.getElementById('pinkNoiseVolume');
-    var brownNoiseVolume = document.getElementById('brownNoiseVolume');
-    var masterVolume = document.getElementById('masterVolume');
+    // Event listener for noise buttons
+    noiseButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            var noise = noises.find(function (n) { return n.buttonId === button.id; });
+            if (noise) {
+                var volumeInput = document.getElementById(noise.buttonId.replace('Button', 'Volume'));
+                toggleNoise(button, noise.audio, volumeInput);
+            }
+        });
+    });
 
-    // Audio elements for each noise
-    var whiteNoiseAudio = new Audio('noise/03-White-Noise-60min.mp3');
-    var pinkNoiseAudio = new Audio('noise/44-Rain-60min.mp3');
-    var brownNoiseAudio = new Audio('noise/49-Underwater-60min.mp3');
+    // Volume Resetter
+    volumeSliders.forEach(function (slider) {
+        slider.addEventListener('dblclick', function () {
+            slider.value = 50;
+            updateNoiseVolume(slider);
+        });
+    });
+
+    // Event listener for master play/stop button
+    playBtn.addEventListener('click', function () {
+        var isPlaying = playBtn.textContent === 'Stop';
+        playBtn.textContent = isPlaying ? 'Play' : 'Stop';
+        playBtn.classList.toggle('btn-success');
+        playBtn.classList.toggle('btn-danger');
+        noiseButtons.forEach(function (button) {
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline-primary');
+        });
+        if (isPlaying) {
+            noises.forEach(function (noise) {
+                noise.audio.pause();
+            });
+        }
+    });
 
     // Function to toggle noise buttons and play/stop audio
     function toggleNoise(button, audio, volumeInput) {
-        if (button.classList.contains('btn-outline-primary')) {
+        if (audio.paused) {
             button.classList.remove('btn-outline-primary');
             button.classList.add('btn-primary');
-            audio.play();
             audio.volume = volumeInput.value / 100;
+            audio.play();
         } else {
             button.classList.remove('btn-primary');
             button.classList.add('btn-outline-primary');
@@ -33,53 +71,26 @@ document.addEventListener('DOMContentLoaded', function () {
         updatePlayButton();
     }
 
-    // Event listeners for noise buttons
-    whiteNoiseButton.addEventListener('click', function () {
-        toggleNoise(whiteNoiseButton, whiteNoiseAudio, whiteNoiseVolume);
-    });
-
-    pinkNoiseButton.addEventListener('click', function () {
-        toggleNoise(pinkNoiseButton, pinkNoiseAudio, pinkNoiseVolume);
-    });
-
-    brownNoiseButton.addEventListener('click', function () {
-        toggleNoise(brownNoiseButton, brownNoiseAudio, brownNoiseVolume);
-    });
-
-    // Function to update the play/stop button based on noise buttons state
     function updatePlayButton() {
-        if (whiteNoiseButton.classList.contains('btn-primary') ||
-            pinkNoiseButton.classList.contains('btn-primary') ||
-            brownNoiseButton.classList.contains('btn-primary')) {
-            playBtn.textContent = 'Stop';
-            playBtn.classList.remove('btn-success');
-            playBtn.classList.add('btn-danger');
-        } else {
-            playBtn.textContent = 'Play';
-            playBtn.classList.remove('btn-danger');
-            playBtn.classList.add('btn-success');
+        var isPlaying = Array.from(noiseButtons).some(function (button) {
+            return button.classList.contains('btn-primary');
+        });
+        playBtn.textContent = isPlaying ? 'Stop' : 'Play';
+        playBtn.classList.remove(isPlaying ? 'btn-success' : 'btn-danger');
+        playBtn.classList.add(isPlaying ? 'btn-danger' : 'btn-success');
+    }
+    // Volume Slider Event Listener
+    function updateNoiseVolume(volumeInput) {
+        var buttonId = volumeInput.id.replace('Volume', 'Button');
+        var button = document.getElementById(buttonId);
+        var noise = noises.find(function (n) { return n.buttonId === buttonId; });
+        if (noise && button.classList.contains('btn-primary')) {
+            noise.audio.volume = volumeInput.value / 100;
         }
     }
-
-    // Event listener for the master play/stop button
-    playBtn.addEventListener('click', function () {
-        if (playBtn.textContent === 'Play') {
-            playBtn.textContent = 'Stop';
-            playBtn.classList.remove('btn-success');
-            playBtn.classList.add('btn-danger');
-        } else {
-            playBtn.textContent = 'Play';
-            playBtn.classList.remove('btn-danger');
-            playBtn.classList.add('btn-success');
-            whiteNoiseAudio.pause();
-            pinkNoiseAudio.pause();
-            brownNoiseAudio.pause();
-            whiteNoiseButton.classList.remove('btn-primary');
-            pinkNoiseButton.classList.remove('btn-primary');
-            brownNoiseButton.classList.remove('btn-primary');
-            whiteNoiseButton.classList.add('btn-outline-primary');
-            pinkNoiseButton.classList.add('btn-outline-primary');
-            brownNoiseButton.classList.add('btn-outline-primary');
-        }
+    volumeSliders.forEach(function (slider) {
+        slider.addEventListener('input', function () {
+            updateNoiseVolume(slider);
+        });
     });
 });
